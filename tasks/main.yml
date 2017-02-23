@@ -7,8 +7,16 @@
      - apache2
   tags: apache
 
+- name: Check for /etc/apache2/mods-enabled/rewrite.load link
+  stat:
+    path: /etc/apache2/mods-enabled/rewrite.load
+  register: a2mod_rewrite
+  tags: apache
+
 - name: enable apache rewrite
-  shell: a2enmod rewrite
+  command: a2enmod rewrite
+  when: not (a2mod_rewrite.stat.islnk is defined and a2mod_rewrite.stat.islnk == True)
+  tags: apache
 
 - name: configure apache2 so it doesn't complain 'can't determine fqdn'
   lineinfile: dest=/etc/apache2/apache2.conf regexp="{{ ansible_fqdn }}" line="ServerName {{ ansible_fqdn }}"
