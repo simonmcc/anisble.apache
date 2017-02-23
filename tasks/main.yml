@@ -14,7 +14,7 @@
   tags: apache
 
 - name: enable apache rewrite
-  shell: a2enmod rewrite
+  command: a2enmod rewrite
   when: not (a2mod_rewrite.stat.islnk is defined and a2mod_rewrite.stat.islnk == True)
   tags: apache
 
